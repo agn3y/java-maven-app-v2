@@ -1,4 +1,4 @@
-@Library('Jenkins-shared-library-v2') _  // make sure library name is correct
+@Library('Jenkins-shared-library-v2') _
 
 pipeline {
     agent any
@@ -15,7 +15,7 @@ pipeline {
         stage("build jar") {
             steps {
                 script {
-                    buildJar()  // your existing function to build jar
+                    buildJar()
                 }
             }
         }
@@ -23,7 +23,7 @@ pipeline {
         stage("docker login") {
             steps {
                 script {
-                    dockerLogin()  // from shared library to login docker
+                    dockerLogin()
                 }
             }
         }
@@ -31,7 +31,7 @@ pipeline {
         stage("build image") {
             steps {
                 script {
-                    dockerBuild(IMAGE_NAME)  // build docker image with tag
+                    buildImage()  // <-- fixed name here
                 }
             }
         }
@@ -39,7 +39,7 @@ pipeline {
         stage("push image") {
             steps {
                 script {
-                    dockerPush(IMAGE_NAME)  // push the image to registry
+                    dockerPush(IMAGE_NAME)
                 }
             }
         }
@@ -47,7 +47,7 @@ pipeline {
         stage("deploy") {
             steps {
                 script {
-                    deployApp()  // your deploy step
+                    deployApp()
                 }
             }
         }
@@ -62,3 +62,4 @@ pipeline {
         }
     }
 }
+
