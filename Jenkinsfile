@@ -1,5 +1,4 @@
-#!/usr/bin/env groovy
-@Library('Jenkins-shared-library') _
+@Library('Jenkins-shared-library-v2') _  // make sure library name is correct
 
 pipeline {
     agent any
@@ -16,7 +15,15 @@ pipeline {
         stage("build jar") {
             steps {
                 script {
-                    buildJar()
+                    buildJar()  // your existing function to build jar
+                }
+            }
+        }
+
+        stage("docker login") {
+            steps {
+                script {
+                    dockerLogin()  // from shared library to login docker
                 }
             }
         }
@@ -24,7 +31,15 @@ pipeline {
         stage("build image") {
             steps {
                 script {
-                    buildImage()
+                    dockerBuild(IMAGE_NAME)  // build docker image with tag
+                }
+            }
+        }
+
+        stage("push image") {
+            steps {
+                script {
+                    dockerPush(IMAGE_NAME)  // push the image to registry
                 }
             }
         }
@@ -32,18 +47,18 @@ pipeline {
         stage("deploy") {
             steps {
                 script {
-                    deployApp()
+                    deployApp()  // your deploy step
                 }
             }
         }
     }
-	post {
+
+    post {
         success {
-            echo "✅ Pipeline completed successfully!"
+            echo "Pipeline completed successfully!"
         }
         failure {
-            echo "❌ Pipeline failed. Check logs above."
+            echo "Pipeline failed. Check logs above."
         }
     }
 }
-
